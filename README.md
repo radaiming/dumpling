@@ -14,8 +14,8 @@ import (
     "dumpling"
 )
 
-func hello() string {
-    return "hello world"
+func hello() (int, map[string]string, string) {
+	return 200, nil, "hello world"
 }
 
 func main() {
