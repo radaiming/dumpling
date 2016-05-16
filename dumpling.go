@@ -24,8 +24,10 @@ func handler(writer http.ResponseWriter, req *http.Request) {
 		writer.WriteHeader(http.StatusNotFound)
 	} else {
 		statusCode, header, content := f()
-		for k, v := range header {
-			writer.Header().Set(k, v)
+		if header != nil {
+			for k, v := range header {
+				writer.Header().Set(k, v)
+			}
 		}
 		writer.WriteHeader(statusCode)
 		writer.Write([]byte(content))
