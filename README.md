@@ -26,7 +26,7 @@ func main() {
 
 ## TODO
 * Parse and pass URL parameters and POST content to handler function
-* Support returning customized HTTP status code
+* ~~Support returning customized HTTP status code~~(Done)
 * Write docs/comments
 * Support route regex matching
 * Support serving static file
