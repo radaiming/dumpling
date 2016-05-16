@@ -37,5 +37,8 @@ func handler(writer http.ResponseWriter, req *http.Request) {
 func Serve(addr string) {
 	http.HandleFunc("/", handler)
 	fmt.Println("now serving on " + addr)
-	http.ListenAndServe(addr, nil)
+	err := http.ListenAndServe(addr, nil)
+	if err != nil {
+		panic(err)
+	}
 }
