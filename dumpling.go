@@ -5,7 +5,8 @@ import (
 	"net/http"
 )
 
-type fn func() string
+// return status code, header and content
+type fn func() (int, map[string]string, string)
 
 var handlersMap = make(map[string]map[string]fn)
 
@@ -22,7 +23,12 @@ func handler(writer http.ResponseWriter, req *http.Request) {
 	if !ok {
 		writer.WriteHeader(http.StatusNotFound)
 	} else {
-		writer.Write([]byte(f()))
+		statusCode, header, content := f()
+		for k, v := range header {
+			writer.Header().Set(k, v)
+		}
+		writer.WriteHeader(statusCode)
+		writer.Write([]byte(content))
 	}
 }
 
