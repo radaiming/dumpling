@@ -11,7 +11,7 @@
 package main
 
 import (
-    "dumpling"
+    "github.com/radaiming/dumpling"
 )
 
 func hello() (int, map[string]string, string) {
