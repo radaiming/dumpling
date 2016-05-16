@@ -5,7 +5,7 @@ Created © 2016-05-16 19:31 by @radaiming
 package main
 
 import (
-    "dumpling"
+    "github.com/radaiming/dumpling"
 )
 
 func hello() string {
