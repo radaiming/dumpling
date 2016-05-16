@@ -1,4 +1,4 @@
-#A very simple web framework for practice.
+#A very simple web framework for practice
 
 ## Install
 
