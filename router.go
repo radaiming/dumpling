@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-type fn func() (int, map[string]string, string)
+type fn func(*HTTPContext)
 
 type Router struct {
 	// many middlewares are not func(http.Handler) http.Handler
@@ -43,19 +43,18 @@ func (r *Router) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	if !ok {
 		writer.WriteHeader(http.StatusNotFound)
 	} else {
-		statusCode, header, content := f()
-		if header != nil {
-			for k, v := range header {
-				writer.Header().Set(k, v)
-			}
+		ctx := newHTTPContext()
+		// TODO: parse request header/url/POST blabla... and set to context
+		f(ctx)
+		for k, v := range ctx.respHeaders {
+			writer.Header().Set(k, v)
 		}
-		writer.WriteHeader(statusCode)
-		writer.Write([]byte(content))
+		writer.WriteHeader(ctx.respStatusCode)
+		writer.Write([]byte(ctx.respContent))
 	}
 }
 
 func (r *Router) Serve(addr string) {
-	fmt.Println("now serving on " + addr)
 	var final http.Handler
 	if r.chainedMiddlewares != nil {
 		final = r.chainedMiddlewares
@@ -63,6 +62,7 @@ func (r *Router) Serve(addr string) {
 		final = r
 	}
 	// will call final's ServeHTTP
+	fmt.Println("now serving on " + addr)
 	err := http.ListenAndServe(addr, final)
 	if err != nil {
 		panic(err)
