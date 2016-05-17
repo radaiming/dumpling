@@ -12,6 +12,7 @@ func redir() (int, map[string]string, string) {
 }
 
 func main() {
-	dumpling.AddRoute("/", "GET", redir)
-	dumpling.Serve("127.0.0.1:9988")
+	r := dumpling.New()
+	r.Get("/", redir)
+	r.Serve("127.0.0.1:9988")
 }
