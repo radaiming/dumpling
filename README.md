@@ -34,3 +34,4 @@ func main() {
 * Support route regex matching
 * Support serving static file
 * ~~Support middleware~~(Done)
+* Write middleware for logging and basic auth
