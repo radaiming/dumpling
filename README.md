@@ -33,4 +33,4 @@ func main() {
 * Write docs/comments
 * Support route regex matching
 * Support serving static file
-* Support middleware
+* ~~Support middleware~~(Done)
