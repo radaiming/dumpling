@@ -11,7 +11,7 @@
 package main
 
 import (
-    "github.com/radaiming/dumpling"
+	"github.com/radaiming/dumpling"
 )
 
 func hello() (int, map[string]string, string) {
@@ -19,14 +19,18 @@ func hello() (int, map[string]string, string) {
 }
 
 func main() {
-    dumpling.AddRoute("/", "GET", hello)
-    dumpling.Serve("127.0.0.1:9988")
+	r := dumpling.New()
+	r.Get("/", hello)
+	r.Post("/", hello)
+	r.Serve("127.0.0.1:9988")
 }
 ```
 
 ## TODO
 * Parse and pass URL parameters and POST content to handler function
+* Pass context to handler function?
 * ~~Support returning customized HTTP status code~~(Done)
 * Write docs/comments
 * Support route regex matching
 * Support serving static file
+* Support middleware
