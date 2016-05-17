@@ -16,8 +16,8 @@ func simpleAppend(h http.Handler) http.Handler {
 	})
 }
 
-func hello() (int, map[string]string, string) {
-	return 200, nil, "hello world"
+func hello(ctx *dumpling.HTTPContext) {
+	ctx.Response("hello world")
 }
 
 func main() {

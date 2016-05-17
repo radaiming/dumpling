@@ -6,9 +6,9 @@ package main
 
 import "github.com/radaiming/dumpling"
 
-func redir() (int, map[string]string, string) {
-	headers := map[string]string{"Location": "https://google.com"}
-	return 301, headers, ""
+func redir(ctx *dumpling.HTTPContext) {
+	ctx.SetStatusCode(302)
+	ctx.AddHeader("Location", "https://google.com")
 }
 
 func main() {
