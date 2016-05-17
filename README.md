@@ -30,7 +30,7 @@ func main() {
 * Parse and pass URL parameters and POST content to handler function
 * Pass context to handler function?
 * ~~Support returning customized HTTP status code~~(Done)
-* Write docs/comments
+* Write docs/comments/tests
 * Support route regex matching
 * Support serving static file
 * ~~Support middleware~~(Done)
