@@ -12,8 +12,10 @@ import (
 type fn func() (int, map[string]string, string)
 
 type Router struct {
-	handlersMap map[string]map[string]fn
-	middleware  func(http.Handler) http.Handler
+	// many middlewares are not func(http.Handler) http.Handler
+	// so let use chains them
+	handlersMap        map[string]map[string]fn
+	chainedMiddlewares http.Handler
 }
 
 func (r *Router) addRoute(path string, method string, f fn) {
@@ -30,6 +32,10 @@ func (r *Router) Get(path string, f fn) {
 
 func (r *Router) Post(path string, f fn) {
 	r.addRoute(path, "POST", f)
+}
+
+func (r *Router) Plug(h http.Handler) {
+	r.chainedMiddlewares = h
 }
 
 func (r *Router) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
@@ -50,7 +56,14 @@ func (r *Router) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 
 func (r *Router) Serve(addr string) {
 	fmt.Println("now serving on " + addr)
-	err := http.ListenAndServe(addr, r)
+	var final http.Handler
+	if r.chainedMiddlewares != nil {
+		final = r.chainedMiddlewares
+	} else {
+		final = r
+	}
+	// will call final's ServeHTTP
+	err := http.ListenAndServe(addr, final)
 	if err != nil {
 		panic(err)
 	}
