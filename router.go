@@ -44,7 +44,7 @@ func (r *Router) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 		writer.WriteHeader(http.StatusNotFound)
 	} else {
 		ctx := newHTTPContext()
-		// TODO: parse request header/url/POST blabla... and set to context
+		ctx.reqHeaders = req.Header
 		f(ctx)
 		for k, v := range ctx.respHeaders {
 			writer.Header().Set(k, v)
