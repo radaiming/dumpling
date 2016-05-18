@@ -25,9 +25,10 @@ func main() {
 	r.Serve("127.0.0.1:9988")
 }
 ```
+See more in [samples](https://github.com/radaiming/dumpling/tree/master/samples).
 
 ## TODO
-* Parse and pass URL parameters and POST content to handler function
+* ~~Parse and pass URL parameters and POST content to handler function~~(Done)
 * ~~Pass context to handler function?~~(Done)
 * ~~Support returning customized HTTP status code~~(Done)
 * Write docs/comments/tests
@@ -35,3 +36,4 @@ func main() {
 * Support serving static file
 * ~~Support middleware~~(Done)
 * ~~Write middleware for logging and basic auth~~(Done)
+* Write a middleware to log request process time
