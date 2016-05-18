@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/radaiming/dumpling"
+	"github.com/radaiming/dumpling/middlewares"
 )
 
 func hashAndReturn(ctx *dumpling.HTTPContext) {
@@ -36,6 +37,7 @@ func hashAndReturn(ctx *dumpling.HTTPContext) {
 
 func main() {
 	r := dumpling.New()
+	r.Plug(middlewares.ProcessTimeLogger(r))
 	r.Post("/", hashAndReturn)
 	r.Serve("127.0.0.1:9988")
 }
