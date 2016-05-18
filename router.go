@@ -7,6 +7,7 @@ package dumpling
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type fn func(*HTTPContext)
@@ -45,6 +46,7 @@ func (r *Router) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	} else {
 		ctx := newHTTPContext()
 		ctx.reqHeaders = req.Header
+		ctx.reqArgs, _ = url.ParseQuery(req.URL.RawQuery)
 		f(ctx)
 		for k, v := range ctx.respHeaders {
 			writer.Header().Set(k, v)

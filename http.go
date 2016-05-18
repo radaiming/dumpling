@@ -6,6 +6,7 @@ package dumpling
 
 import (
 	"net/http"
+	"net/url"
 )
 
 type HTTPContext struct {
@@ -14,6 +15,7 @@ type HTTPContext struct {
 	respContent    string
 
 	reqHeaders http.Header
+	reqArgs    url.Values
 }
 
 func (h *HTTPContext) SetStatusCode(code int) {
@@ -30,4 +32,12 @@ func (h *HTTPContext) Response(content string) {
 
 func (h *HTTPContext) GetHeader(key string) string {
 	return h.reqHeaders.Get(key)
+}
+
+func (h *HTTPContext) GetReqArgs() url.Values {
+	return h.reqArgs
+}
+
+func (h *HTTPContext) GetReqArg(key string) string {
+	return h.reqArgs.Get(key)
 }
