@@ -16,6 +16,7 @@ type HTTPContext struct {
 
 	reqHeaders http.Header
 	reqArgs    url.Values
+	postForm   url.Values
 }
 
 func (h *HTTPContext) SetStatusCode(code int) {
@@ -40,4 +41,12 @@ func (h *HTTPContext) GetReqArgs() url.Values {
 
 func (h *HTTPContext) GetReqArg(key string) string {
 	return h.reqArgs.Get(key)
+}
+
+func (h *HTTPContext) GetPostForms() url.Values {
+	return h.postForm
+}
+
+func (h *HTTPContext) GetPostForm(key string) string {
+	return h.postForm.Get(key)
 }
