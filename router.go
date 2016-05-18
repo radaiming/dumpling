@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 type fn func(*HTTPContext)
@@ -43,9 +44,12 @@ func initContext(ctx *HTTPContext, req *http.Request) {
 	ctx.reqHeaders = req.Header
 	ctx.reqArgs, _ = url.ParseQuery(req.URL.RawQuery)
 	if req.Method == "POST" {
-		if req.Header.Get("Content-Type") == "application/x-www-form-urlencoded" {
+		contentType := req.Header.Get("Content-Type")
+		if contentType == "application/x-www-form-urlencoded" {
 			req.ParseForm()
 			ctx.postForm = req.PostForm
+		} else if strings.Index(contentType, "multipart/form-data") >= 0 {
+			ctx.multipartStreamReader, _ = req.MultipartReader()
 		}
 	}
 }

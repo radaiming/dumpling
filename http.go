@@ -5,6 +5,7 @@ Created © 2016-05-17 22:32 by @radaiming
 package dumpling
 
 import (
+	"mime/multipart"
 	"net/http"
 	"net/url"
 )
@@ -14,9 +15,10 @@ type HTTPContext struct {
 	respHeaders    map[string]string
 	respContent    string
 
-	reqHeaders http.Header
-	reqArgs    url.Values
-	postForm   url.Values
+	reqHeaders            http.Header
+	reqArgs               url.Values
+	postForm              url.Values
+	multipartStreamReader *multipart.Reader
 }
 
 func (h *HTTPContext) SetStatusCode(code int) {
@@ -49,4 +51,8 @@ func (h *HTTPContext) GetPostForms() url.Values {
 
 func (h *HTTPContext) GetPostForm(key string) string {
 	return h.postForm.Get(key)
+}
+
+func (h *HTTPContext) GetMultipartStreamReader() *multipart.Reader {
+	return h.multipartStreamReader
 }
