@@ -36,4 +36,4 @@ See more in [samples](https://github.com/radaiming/dumpling/tree/master/samples)
 * Support serving static file
 * ~~Support middleware~~(Done)
 * ~~Write middleware for logging and basic auth~~(Done)
-* Write a middleware to log request process time
+* ~~Write a middleware to log request process time~~(Done)
