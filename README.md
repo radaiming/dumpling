@@ -1,4 +1,5 @@
 #A very simple web framework for practice
+[![Build Status](https://travis-ci.org/radaiming/dumpling.svg?branch=master)](https://travis-ci.org/radaiming/dumpling)
 
 ## Install
 
