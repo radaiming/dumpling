@@ -133,9 +133,17 @@ def test_static():
 
 
 def main():
-    for k, v in globals().items():
-        if k.startswith('test_') and hasattr(v, '__call__'):
-            v.__call__()
+    test_basic_auth()
+    test_hello()
+    test_logging_demo()
+    test_middleware()
+    test_process_time_logger()
+    test_redirect()
+    test_regex()
+    test_return_forms()
+    test_return_hash()
+    test_return_query()
+    test_static()
 
 
 if __name__ == '__main__':
