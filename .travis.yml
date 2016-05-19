@@ -1,3 +1,5 @@
+sudo: required
+
 language: go
 
 go:
@@ -5,6 +7,10 @@ go:
 
 install:
     - go get github.com/radaiming/dumpling
+
+before_script:
+    - sudo apt-get update -qq
+    - sudo apt-get install -y -qq python3
 
 script:
     - go test -v .
