@@ -8,23 +8,26 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 )
 
 type fn func(*HTTPContext)
 
 type Router struct {
+	// map[HTTP Method][Compiled Regexp] -> fn
+	handlersMap map[string]map[*regexp.Regexp]fn
 	// many middlewares are not func(http.Handler) http.Handler
 	// so let use chains them
-	handlersMap        map[string]map[string]fn
 	chainedMiddlewares http.Handler
 }
 
 func (r *Router) addRoute(path string, method string, f fn) {
-	if _, ok := r.handlersMap[path]; !ok {
-		r.handlersMap[path] = map[string]fn{method: f}
+	regexpPtr := regexp.MustCompile(path)
+	if _, ok := r.handlersMap[method]; !ok {
+		r.handlersMap[method] = map[*regexp.Regexp]fn{regexpPtr: f}
 	} else {
-		r.handlersMap[path][method] = f
+		r.handlersMap[method][regexpPtr] = f
 	}
 }
 
@@ -55,19 +58,30 @@ func initContext(ctx *HTTPContext, req *http.Request) {
 }
 
 func (r *Router) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
-	f, ok := r.handlersMap[req.URL.Path][req.Method]
+	regFnMap, ok := r.handlersMap[req.Method]
 	if !ok {
 		writer.WriteHeader(http.StatusNotFound)
-	} else {
-		ctx := newHTTPContext()
-		initContext(ctx, req)
-		f(ctx)
-		for k, v := range ctx.respHeaders {
-			writer.Header().Set(k, v)
-		}
-		writer.WriteHeader(ctx.respStatusCode)
-		writer.Write([]byte(ctx.respContent))
+		return
 	}
+	var f fn
+	for reg, _ := range regFnMap {
+		if reg.FindString(req.URL.Path) == req.URL.Path {
+			f = regFnMap[reg]
+			break
+		}
+	}
+	if f == nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	ctx := newHTTPContext()
+	initContext(ctx, req)
+	f(ctx)
+	for k, v := range ctx.respHeaders {
+		writer.Header().Set(k, v)
+	}
+	writer.WriteHeader(ctx.respStatusCode)
+	writer.Write([]byte(ctx.respContent))
 }
 
 func (r *Router) Serve(addr string) {

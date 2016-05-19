@@ -1,8 +1,10 @@
 package dumpling
 
+import "regexp"
+
 func New() *Router {
 	r := &Router{}
-	r.handlersMap = make(map[string]map[string]fn)
+	r.handlersMap = make(map[string]map[*regexp.Regexp]fn)
 	r.chainedMiddlewares = nil
 	return r
 }
