@@ -4,8 +4,8 @@ go:
     - 1.6
 
 install:
-    - true
+    - go get github.com/radaiming/dumpling
 
 script:
     - go test -v .
-    - go test -v ./middlewares
+    - ./test_samples.py
