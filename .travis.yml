@@ -3,5 +3,9 @@ language: go
 go:
     - 1.6
 
+install:
+    - true
+
 script:
-    - go test
+    - go test -v .
+    - go test -v middlewares
