@@ -33,7 +33,7 @@ See more in [samples](https://github.com/radaiming/dumpling/tree/master/samples)
 * ~~Support returning customized HTTP status code~~(Done)
 * Write docs/comments/tests
 * Support route regex matching
-* Support serving static file
+* ~~Support serving static file~~(Done)
 * ~~Support middleware~~(Done)
 * ~~Write middleware for logging and basic auth~~(Done)
 * ~~Write a middleware to log request process time~~(Done)
