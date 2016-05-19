@@ -8,4 +8,4 @@ install:
 
 script:
     - go test -v .
-    - go test -v middlewares
+    - go test -v ./middlewares
