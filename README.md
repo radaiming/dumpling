@@ -32,7 +32,7 @@ See more in [samples](https://github.com/radaiming/dumpling/tree/master/samples)
 * ~~Pass context to handler function?~~(Done)
 * ~~Support returning customized HTTP status code~~(Done)
 * Write docs/comments/tests
-* Support route regex matching
+* ~~Support route regex matching~~
 * ~~Support serving static file~~(Done)
 * ~~Support middleware~~(Done)
 * ~~Write middleware for logging and basic auth~~(Done)
