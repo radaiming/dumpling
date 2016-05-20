@@ -33,7 +33,7 @@ See more in [samples](https://github.com/radaiming/dumpling/tree/master/samples)
 * ~~Parse and pass URL parameters and POST content to handler function~~(Done)
 * ~~Pass context to handler function?~~(Done)
 * ~~Support returning customized HTTP status code~~(Done)
-* Write docs/comments/tests
+* ~~Write docs/comments/tests~~(Done)
 * ~~Support route regex matching~~
 * ~~Support serving static file~~(Done)
 * ~~Support middleware~~(Done)
