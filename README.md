@@ -1,4 +1,5 @@
 #A very simple web framework for practice
+[![GoDoc](https://godoc.org/github.com/radaiming/dumpling?status.svg)](https://godoc.org/github.com/radaiming/dumpling)
 [![Build Status](https://travis-ci.org/radaiming/dumpling.svg?branch=master)](https://travis-ci.org/radaiming/dumpling)
 
 ## Install
