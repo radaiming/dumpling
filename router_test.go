@@ -58,7 +58,7 @@ func TestAddGet(t *testing.T) {
 func TestPlug(t *testing.T) {
 	r := New()
 	r.Plug(simpleAppend(r))
-	if r.chainedMiddlewares == nil {
+	if _, ok := r.chainedMiddlewares.(http.Handler); !ok {
 		t.Error("Failed to add middleware")
 	}
 }
