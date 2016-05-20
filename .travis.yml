@@ -1,18 +1,7 @@
-sudo: required
-
 language: go
 
 go:
     - 1.6
 
-install:
-    - go get github.com/radaiming/dumpling
-    - go get github.com/gorilla/handlers
-
-before_script:
-    - sudo apt-get update -qq
-    - sudo apt-get install -y -qq python3
-
 script:
     - go test -v .
-    - ./test_samples.py
