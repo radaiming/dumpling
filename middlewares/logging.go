@@ -6,6 +6,8 @@ import (
 	"net/http/httptest"
 )
 
+// Middleware for logging client requests,
+// log will be printed to stdout of server side
 func Logging(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// https://justinas.org/writing-http-middleware-in-go/

@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+// Middleware for logging process time of client requests,
+// log will be printed to stdout of server side
 func ProcessTimeLogger(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		startPoint := time.Now().Nanosecond()

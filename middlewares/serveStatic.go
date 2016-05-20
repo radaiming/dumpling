@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+// Middleware for serving static content, directory index is enabled,
+// accessing parent directories is forbidden
 func ServeStatic(urlPath string, fsPath string, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if urlPath[0] != '/' {
