@@ -14,6 +14,8 @@ import (
 
 type fn func(*HTTPContext)
 
+// The Router contains user defined path/handler map,
+// the user chained middlewares is also inside
 type Router struct {
 	// map[HTTP Method][Compiled Regexp] -> fn
 	handlersMap map[string]map[*regexp.Regexp]fn
@@ -31,14 +33,18 @@ func (r *Router) addRoute(path string, method string, f fn) {
 	}
 }
 
+// Add a handler for GET request under the path
 func (r *Router) Get(path string, f fn) {
 	r.addRoute(path, "GET", f)
 }
 
+// Add a handler for POST request under the path
 func (r *Router) Post(path string, f fn) {
 	r.addRoute(path, "POST", f)
 }
 
+// Plug in a chained middleware, if run multiple times,
+// only the last call takes effect
 func (r *Router) Plug(h http.Handler) {
 	r.chainedMiddlewares = h
 }
@@ -57,6 +63,7 @@ func initContext(ctx *HTTPContext, req *http.Request) {
 	}
 }
 
+// This function implements http.Handler interface
 func (r *Router) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	regFnMap, ok := r.handlersMap[req.Method]
 	if !ok {
@@ -84,6 +91,7 @@ func (r *Router) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	writer.Write([]byte(ctx.respContent))
 }
 
+// Start serving on given address
 func (r *Router) Serve(addr string) {
 	var final http.Handler
 	if r.chainedMiddlewares != nil {
