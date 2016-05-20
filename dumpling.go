@@ -5,8 +5,8 @@ import "regexp"
 // Return a new Router instance
 func New() *Router {
 	r := &Router{}
-	r.handlersMap = make(map[string]map[*regexp.Regexp]fn)
-	r.chainedMiddlewares = nil
+	r.HandlersMap = make(map[string]map[*regexp.Regexp]fn)
+	r.ChainedMiddlewares = nil
 	return r
 }
 
@@ -14,8 +14,8 @@ func New() *Router {
 func newHTTPContext() *HTTPContext {
 	c := &HTTPContext{}
 	// use 200 by default
-	c.respStatusCode = 200
-	c.respHeaders = make(map[string]string)
-	c.respContent = ""
+	c.RespStatusCode = 200
+	c.RespHeaders = make(map[string]string)
+	c.RespContent = ""
 	return c
 }

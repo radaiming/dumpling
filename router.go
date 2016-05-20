@@ -17,19 +17,21 @@ type fn func(*HTTPContext)
 // The Router contains user defined path/handler map,
 // the user chained middlewares is also inside
 type Router struct {
+	// A map for user defined handler and path:
 	// map[HTTP Method][Compiled Regexp] -> fn
-	handlersMap map[string]map[*regexp.Regexp]fn
-	// many middlewares are not func(http.Handler) http.Handler
-	// so let use chains them
-	chainedMiddlewares http.Handler
+	HandlersMap map[string]map[*regexp.Regexp]fn
+
+	// many middlewares are not func(http.Handler) http.Handler,
+	// so please chain them manually, then pass in
+	ChainedMiddlewares http.Handler
 }
 
 func (r *Router) addRoute(path string, method string, f fn) {
 	regexpPtr := regexp.MustCompile(path)
-	if _, ok := r.handlersMap[method]; !ok {
-		r.handlersMap[method] = map[*regexp.Regexp]fn{regexpPtr: f}
+	if _, ok := r.HandlersMap[method]; !ok {
+		r.HandlersMap[method] = map[*regexp.Regexp]fn{regexpPtr: f}
 	} else {
-		r.handlersMap[method][regexpPtr] = f
+		r.HandlersMap[method][regexpPtr] = f
 	}
 }
 
@@ -46,26 +48,26 @@ func (r *Router) Post(path string, f fn) {
 // Plug in a chained middleware, if run multiple times,
 // only the last call takes effect
 func (r *Router) Plug(h http.Handler) {
-	r.chainedMiddlewares = h
+	r.ChainedMiddlewares = h
 }
 
 func initContext(ctx *HTTPContext, req *http.Request) {
-	ctx.reqHeaders = req.Header
-	ctx.reqArgs, _ = url.ParseQuery(req.URL.RawQuery)
+	ctx.ReqHeaders = req.Header
+	ctx.ReqArgs, _ = url.ParseQuery(req.URL.RawQuery)
 	if req.Method == "POST" {
 		contentType := req.Header.Get("Content-Type")
 		if contentType == "application/x-www-form-urlencoded" {
 			req.ParseForm()
-			ctx.postForm = req.PostForm
+			ctx.PostForm = req.PostForm
 		} else if strings.Index(contentType, "multipart/form-data") >= 0 {
-			ctx.multipartStreamReader, _ = req.MultipartReader()
+			ctx.MultipartStreamReader, _ = req.MultipartReader()
 		}
 	}
 }
 
 // This function implements http.Handler interface
 func (r *Router) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
-	regFnMap, ok := r.handlersMap[req.Method]
+	regFnMap, ok := r.HandlersMap[req.Method]
 	if !ok {
 		writer.WriteHeader(http.StatusNotFound)
 		return
@@ -84,18 +86,18 @@ func (r *Router) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	ctx := newHTTPContext()
 	initContext(ctx, req)
 	f(ctx)
-	for k, v := range ctx.respHeaders {
+	for k, v := range ctx.RespHeaders {
 		writer.Header().Set(k, v)
 	}
-	writer.WriteHeader(ctx.respStatusCode)
-	writer.Write([]byte(ctx.respContent))
+	writer.WriteHeader(ctx.RespStatusCode)
+	writer.Write([]byte(ctx.RespContent))
 }
 
 // Start serving on given address
 func (r *Router) Serve(addr string) {
 	var final http.Handler
-	if r.chainedMiddlewares != nil {
-		final = r.chainedMiddlewares
+	if r.ChainedMiddlewares != nil {
+		final = r.ChainedMiddlewares
 	} else {
 		final = r
 	}

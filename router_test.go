@@ -22,17 +22,17 @@ func simpleAppend(h http.Handler) http.Handler {
 func TestAddPost(t *testing.T) {
 	r := New()
 	r.Post("/abc", hello)
-	if len(r.handlersMap["POST"]) != 1 {
+	if len(r.HandlersMap["POST"]) != 1 {
 		t.Error("Failed to add POST route")
 	}
-	for k, v := range r.handlersMap["POST"] {
+	for k, v := range r.HandlersMap["POST"] {
 		if k.String() != "/abc" {
 			t.Error("Compiled regexp returns a different source reg text")
 		}
 		ctx := newHTTPContext()
 		v(ctx)
-		if ctx.respContent != "hello world" {
-			t.Error("The function in added to handlersMap is not returning what expected")
+		if ctx.RespContent != "hello world" {
+			t.Error("The function in added to HandlersMap is not returning what expected")
 		}
 	}
 }
@@ -40,17 +40,17 @@ func TestAddPost(t *testing.T) {
 func TestAddGet(t *testing.T) {
 	r := New()
 	r.Get("/abc", hello)
-	if len(r.handlersMap["GET"]) != 1 {
+	if len(r.HandlersMap["GET"]) != 1 {
 		t.Error("Failed to add GET route")
 	}
-	for k, v := range r.handlersMap["GET"] {
+	for k, v := range r.HandlersMap["GET"] {
 		if k.String() != "/abc" {
 			t.Error("Compiled regexp returns a different source reg text")
 		}
 		ctx := newHTTPContext()
 		v(ctx)
-		if ctx.respContent != "hello world" {
-			t.Error("The function in added to handlersMap is not returning what expected")
+		if ctx.RespContent != "hello world" {
+			t.Error("The function in added to HandlersMap is not returning what expected")
 		}
 	}
 }
@@ -58,7 +58,7 @@ func TestAddGet(t *testing.T) {
 func TestPlug(t *testing.T) {
 	r := New()
 	r.Plug(simpleAppend(r))
-	if _, ok := r.chainedMiddlewares.(http.Handler); !ok {
+	if _, ok := r.ChainedMiddlewares.(http.Handler); !ok {
 		t.Error("Failed to add middleware")
 	}
 }
