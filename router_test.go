@@ -105,7 +105,7 @@ func TestInitContext(t *testing.T) {
 	// https://matt.aimonetti.net/posts/2013/07/01/golang-multipart-file-upload-example/
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
-	writingPart, err := writer.CreateFormField("some..field...name")
+	writingPart, err := writer.CreateFormField("some...field...name")
 	if err != nil {
 		t.Error("Failed to create form")
 	}
@@ -121,14 +121,8 @@ func TestInitContext(t *testing.T) {
 	req, err = http.NewRequest("POST", "http://127.0.0.1:9988/", body)
 	req.Header.Add("Content-Type", writer.FormDataContentType())
 	initContext(ctx, req)
-	multipartStreamReader := ctx.GetMultipartStreamReader()
-	readingPart, err := multipartStreamReader.NextPart()
-	buffer := make([]byte, 1024)
-	n, err := readingPart.Read(buffer)
-	if err != nil {
-		t.Error("Error reading from multipart section")
-	}
-	if string(buffer[0:n]) != "some...string" {
+	_ = "breakpoint"
+	if ctx.GetMultipartForm().Value["some...field...name"][0] != "some...string" {
 		t.Error("Get wrong string from multipart reader")
 	}
 }
