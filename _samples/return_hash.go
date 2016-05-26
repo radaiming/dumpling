@@ -8,6 +8,7 @@ package main
 import (
 	"crypto/sha1"
 	"fmt"
+	"io"
 
 	"github.com/radaiming/dumpling"
 	"github.com/radaiming/dumpling/middlewares"
@@ -15,23 +16,23 @@ import (
 
 func hashAndReturn(ctx *dumpling.HTTPContext) {
 	returnContent := ""
-	multipartStreamReader := ctx.GetMultipartStreamReader()
-	for {
-		part, err := multipartStreamReader.NextPart()
-		if err != nil {
-			break
-		}
-		h := sha1.New()
-		buffer := make([]byte, 1024)
-		for {
-			n, err := part.Read(buffer)
-			h.Write(buffer[0:n])
+	for _, fileHeaders := range ctx.GetMultipartForm().File {
+		for _, fileHeader := range fileHeaders {
+			fileName := fileHeader.Filename
+			f, err := fileHeader.Open()
 			if err != nil {
-				break
+				continue
 			}
+			defer f.Close()
+			h := sha1.New()
+			_, err = io.Copy(h, f)
+			if err != nil {
+				continue
+			}
+			returnContent += fmt.Sprintf("%s -> %x\n", fileName, h.Sum(nil))
 		}
-		returnContent += fmt.Sprintf("%s -> %x\n", part.FileName(), h.Sum(nil))
 	}
+	ctx.GetMultipartForm().RemoveAll()
 	ctx.Response(returnContent)
 }
 
