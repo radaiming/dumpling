@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strings"
 )
 
 type fn func(*HTTPContext)
@@ -59,8 +58,11 @@ func initContext(ctx *HTTPContext, req *http.Request) {
 		if contentType == "application/x-www-form-urlencoded" {
 			req.ParseForm()
 			ctx.PostForm = req.PostForm
-		} else if strings.Index(contentType, "multipart/form-data") >= 0 {
-			ctx.MultipartStreamReader, _ = req.MultipartReader()
+		} else {
+			err := req.ParseMultipartForm(32 << 20)
+			if err == nil {
+				ctx.MultipartForm = req.MultipartForm
+			}
 		}
 	}
 }

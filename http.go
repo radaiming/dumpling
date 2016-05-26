@@ -33,8 +33,8 @@ type HTTPContext struct {
 	// HTTP POST forms of client application/x-www-form-urlencoded request
 	PostForm url.Values
 
-	// *multipart.Reader of client multipart/form-data request
-	MultipartStreamReader *multipart.Reader
+	// the same MultipartForm in http.Request struct
+	MultipartForm *multipart.Form
 }
 
 // Set response status code
@@ -77,7 +77,7 @@ func (h *HTTPContext) GetPostForm(key string) string {
 	return h.PostForm.Get(key)
 }
 
-// Get *multipart.Reader from multipart/form-data request
-func (h *HTTPContext) GetMultipartStreamReader() *multipart.Reader {
-	return h.MultipartStreamReader
+// Get *multipart.Form from multipart/form-data request
+func (h *HTTPContext) GetMultipartForm() *multipart.Form {
+	return h.MultipartForm
 }
